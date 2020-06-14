@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WorldGenerator.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Grid>
         <StackPanel>
             <Button Click="GenerateClicked">Generate</Button>
-            <Canvas x:Name="canvas" Background="White"></Canvas>
+            <Canvas x:Name="canvas" Background="White" Width="500" Height="500"></Canvas>
         </StackPanel>
             
 

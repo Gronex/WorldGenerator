@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using WorldGenerator.Core;
+
 namespace WorldGenerator.UI
 {
     /// <summary>
@@ -20,27 +22,39 @@ namespace WorldGenerator.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Core.WorldGenerator _worldGenerator;
+
         public MainWindow()
         {
             InitializeComponent();
+            _worldGenerator = new Core.WorldGenerator(new Core.Random());
         }
 
         private void GenerateClicked(object sender, RoutedEventArgs e)
         {
             var canvas = this.FindName("canvas") as Canvas;
 
-            canvas?.Children.Add(new Polygon
+            if(canvas == null)
             {
-                Points = new PointCollection
+                return;
+            }
+
+            var points = _worldGenerator.GeneratePoints((int)canvas.Width, (int)canvas.Height)
+                .Take(1000)
+                .ToArray();
+
+            foreach(var (X, Y) in points)
+            {
+                var ellipse = new Ellipse
                 {
-                    { new Point(10, 10) },
-                    { new Point(20, 10) },
-                    { new Point(20, 20) },
-                    { new Point(10, 20) },
-                    { new Point(10, 15) },
-                },
-                Fill = new SolidColorBrush(Color.FromRgb(1, 1, 1))
-            });
+                    Width = 5,
+                    Height = 5,
+                    Fill = new SolidColorBrush(Color.FromRgb(1,1,1))
+                };
+                canvas.Children.Add(ellipse);
+                Canvas.SetLeft(ellipse, X - 2.5);
+                Canvas.SetTop(ellipse, Y - 2.5);
+            }
         }
     }
 }
