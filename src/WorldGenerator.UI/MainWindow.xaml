@@ -5,13 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WorldGenerator.UI"
         mc:Ignorable="d"
-        Title="MainWindow" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+        xmlns:VM="clr-namespace:WorldGenerator.UI.ViewModels"
+        Title="MainWindow" Width="600" Height="400">
+    <Window.DataContext>
+        <VM:MainWindowViewModel />
+    </Window.DataContext>
+
     <Grid>
-        <StackPanel>
-            <Button Click="GenerateClicked">Generate</Button>
-            <Canvas x:Name="canvas" Background="White" Width="500" Height="500"></Canvas>
-        </StackPanel>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Text="{Binding PointCount, Mode=TwoWay}"></TextBox>
+        <Label Grid.Row="1" VerticalAlignment="Top">Points:</Label>
+        <Button Command="{Binding GeneratePointsCommand}" Grid.ColumnSpan="2" VerticalAlignment="Bottom">Generate</Button>
+
 
     </Grid>
 </Window>

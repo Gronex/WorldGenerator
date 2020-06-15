@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WorldGenerator.Core
 {
@@ -12,12 +13,20 @@ namespace WorldGenerator.Core
             _random = random;
         }
 
-        public IEnumerable<(int X, int Y)> GeneratePoints(int xMax, int yMax)
+        public IEnumerable<(double X, double Y)> GeneratePoints()
         {
             while (true)
             {
-                yield return (_random.Next(0, xMax), _random.Next(0, yMax));
+                yield return (_random.Next(), _random.Next());
             }
+        }
+
+        public void BuildVoronoi(IEnumerable<(int X, int Y)> points)
+        {
+            var verteces = points.Select((point) => new double[] { point.X, point.Y });
+            var mesh = MIConvexHull.Triangulation.CreateVoronoi(verteces.ToList());
+
+            Console.Out.WriteLine(mesh?.ToString());
         }
     }
 }

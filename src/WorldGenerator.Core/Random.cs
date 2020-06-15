@@ -27,5 +27,10 @@ namespace WorldGenerator.Core
         {
             return _random.Next(min, max);
         }
+
+        public double Next()
+        {
+            return _random.NextDouble();
+        }
     }
 }

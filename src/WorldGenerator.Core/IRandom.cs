@@ -11,5 +11,7 @@ namespace WorldGenerator.Core
         IRandom NewRandom(int seed);
 
         int Next(int min, int max);
+
+        double Next();
     }
 }
