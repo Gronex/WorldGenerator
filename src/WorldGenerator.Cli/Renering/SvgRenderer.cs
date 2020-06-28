@@ -54,7 +54,7 @@ namespace WorldGenerator.Cli
             container.Children.Add(circle);
         }
 
-        public string AddPolygon(params Vector2[] points)
+        public string AddPolygon(Color color, params Vector2[] points)
         {
             var polyPoints = new SvgPointCollection();
 
@@ -65,7 +65,7 @@ namespace WorldGenerator.Cli
             _svg.Children.Add(new SvgPolygon
             {
                 Points = polyPoints,
-                Fill = new SvgColourServer(Color.Teal),
+                Fill = new SvgColourServer(color),
                 ID = id
             });
 

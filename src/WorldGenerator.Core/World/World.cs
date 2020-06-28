@@ -9,7 +9,7 @@ namespace WorldGenerator.Core
 {
     public class World
     {
-        public IReadOnlyCollection<Cell> Cells { get; set; }
+        public IReadOnlyList<Cell> Cells { get; set; }
 
         public Vector2 WorldLimit { get; private set; }
         public Vector2 WorldStart { get; private set; }

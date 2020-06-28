@@ -13,6 +13,8 @@ namespace WorldGenerator.Core
 
         public Vector2 RegionBase { get; private set; }
 
+        public double Height { get; set; }
+
         public Cell(ICollection<Vector2> points, Vector2 regionBase)
         {
             Points = points.ToArray();

@@ -94,6 +94,15 @@ namespace WorldGenerator.Core
             return world;
         }
 
+        public void GrowIsland(World world, int islandSeed)
+        {
+            var seedCell = world.Cells[islandSeed];
+
+            var height = _random.Next();
+
+            seedCell.Height = height;
+        }
+
         public World RelaxCells(World world)
         {
             return InitializeWorld(world.Cells.Select(x => x.GetCentroid()), world.WorldStart, world.WorldLimit);

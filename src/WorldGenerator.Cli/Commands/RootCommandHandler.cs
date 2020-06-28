@@ -3,12 +3,14 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 
 using WorldGenerator.Cli.Arguments;
+using WorldGenerator.Cli.Renering;
 using WorldGenerator.Core;
 
 namespace WorldGenerator.Cli
@@ -19,6 +21,8 @@ namespace WorldGenerator.Cli
         private readonly Core.WorldGenerator _worldGenerator;
         private readonly IDrawingFactory _drawingFactory;
         private readonly IRandom _random;
+
+        private const int WaterLevel = 240;
 
         public RootCommandHandler(IConsole console, Core.WorldGenerator worldGenerator, IDrawingFactory drawingFactory, IRandom random)
         {
@@ -71,7 +75,7 @@ namespace WorldGenerator.Cli
                 _console.Out.WriteLine($"Elapsed: {stopWatch.Elapsed}");
             }
 
-            world.Transform(Matrix3x2.CreateTranslation(worldLimit / 2));
+            SetHeights(world);
 
             _console.Out.WriteLine("Starting draw");
 
@@ -84,13 +88,25 @@ namespace WorldGenerator.Cli
             return Task.FromResult(0);
         }
 
+        private void SetHeights(World world)
+        {
+            var islandSeed = _random.Next(0, world.Cells.Count - 1);
+
+            _worldGenerator.GrowIsland(world, islandSeed);
+        }
+
         private void DrawVoronoi(
             IRenderer drawing,
             World world)
         {
             foreach(var cell in world.Cells)
             {
-                drawing.AddPolygon(cell.Points);
+                var color = HslHelper.GetColorFromHSL(
+                    (cell.Height * -WaterLevel) + WaterLevel,
+                    1,
+                    0.5);
+
+                drawing.AddPolygon(color, cell.Points);
                 drawing.AddPoint(cell.RegionBase);
             }
         }

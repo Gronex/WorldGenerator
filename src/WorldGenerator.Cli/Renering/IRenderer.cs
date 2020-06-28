@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -13,7 +14,7 @@ namespace WorldGenerator.Cli
 
         void AddLine(Vector2 start, Vector2 end);
 
-        string AddPolygon(params Vector2[] points);
+        string AddPolygon(Color color, params Vector2[] points);
 
         void Draw();
     }
