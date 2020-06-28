@@ -8,19 +8,24 @@ namespace WorldGenerator.Core
 {
     public class Random : IRandom
     {
-        private readonly System.Random _random;
+        private System.Random _random;
+
+        public int Seed { get; private set; }
 
         public Random() : this(new System.Random())
         {}
 
         private Random(System.Random random)
         {
-            _random = random;
+            Seed = random.Next();
+            _random = new System.Random(Seed);
         }
 
-        public IRandom NewRandom(int seed)
+        public IRandom SetSeed(int seed)
         {
-            return new Random(new System.Random(seed));
+            Seed = seed;
+            _random = new System.Random(seed);
+            return this;
         }
 
         public int Next(int min, int max)

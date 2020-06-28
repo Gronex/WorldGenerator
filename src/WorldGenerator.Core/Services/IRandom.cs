@@ -8,7 +8,9 @@ namespace WorldGenerator.Core
 {
     public interface IRandom
     {
-        IRandom NewRandom(int seed);
+        int Seed { get; }
+
+        IRandom SetSeed(int seed);
 
         int Next(int min, int max);
 

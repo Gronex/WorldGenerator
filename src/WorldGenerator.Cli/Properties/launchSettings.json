@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WorldGenerator.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "--seed 1057819583 --relax 0"
+    }
+  }
+}
