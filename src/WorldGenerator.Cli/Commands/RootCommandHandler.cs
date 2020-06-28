@@ -2,6 +2,7 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -29,6 +30,8 @@ namespace WorldGenerator.Cli
 
         public override Task<int> ExecuteCommand(GeneratorArguments args)
         {
+            var stopWatch = new Stopwatch();
+
             if (args.Seed.HasValue)
             {
                 _random.SetSeed(args.Seed.Value);
@@ -44,30 +47,38 @@ namespace WorldGenerator.Cli
 
             var worldLimit = new Vector2(args.Width, args.Height);
 
+            stopWatch.Restart();
             var points = _worldGenerator.GeneratePoints()
                 .Select(p => new Vector2(p.X * worldLimit.X, p.Y * worldLimit.Y))
                 .Take(args.Points)
                 .ToArray();
 
-            var drawing = _drawingFactory.GetNewRenderer();
+            _console.Out.WriteLine($"Elapsed: {stopWatch.Elapsed}");
 
+            _console.Out.WriteLine($"Constructing world...");
+            stopWatch.Restart();
             var world = _worldGenerator.InitializeWorld(points, Vector2.Zero, worldLimit);
+            _console.Out.WriteLine($"Elapsed: {stopWatch.Elapsed}");
+
 
             _console.Out.WriteLine($"Starting Relaxation process {args.Relax} iterations");
             for (var i = 0; i < args.Relax; i++)
             {
                 _console.Out.WriteLine($"Relaxing {i + 1} of {args.Relax}");
+                stopWatch.Restart();
                 points = world.Cells.Select(x => x.GetCentroid()).ToArray();
                 world = _worldGenerator.RelaxCells(world);
+                _console.Out.WriteLine($"Elapsed: {stopWatch.Elapsed}");
             }
 
             world.Transform(Matrix3x2.CreateTranslation(worldLimit / 2));
 
             _console.Out.WriteLine("Starting draw");
 
+            var drawing = _drawingFactory.GetNewRenderer();
             DrawVoronoi(drawing, world);
-
             drawing.Draw();
+
             var path = Path.GetFullPath("./Temp.svg");
             _console.Out.WriteLine($"Resulting file: {path}");
             return Task.FromResult(0);
